@@ -77,12 +77,12 @@ object GodogStepsIndex {
             }
 
             val steps = dump.steps.mapNotNull { step ->
-                val element = resolveElement(project, manifestDir, step.defFile, step.defLine)
+                val element = resolveElement(project, manifestDir, step.file, step.line)
                 if (element == null) {
-                    thisLogger().warn("Could not resolve element for step '${step.expr}' at ${step.defFile}:${step.defLine}")
+                    thisLogger().warn("Could not resolve element for step '${step.expr}' at ${step.file}:${step.line}")
                     return@mapNotNull null
                 }
-                GodogStepDefinition(element, step)
+                GodogStepDefinition(element, step, manifestDir)
             }
 
             val test = dump.test?.let { t ->
@@ -95,7 +95,7 @@ object GodogStepsIndex {
             )
 
             // Depend on this JSON file's own PSI: it's what defines validity of everything we
-            // just resolved (defFile/defLine are only meaningful relative to a given dump), and
+            // just resolved (file/line are only meaningful relative to a given dump), and
             // godog rewrites the whole file on every WriteManifest call rather than patching it.
             CachedValueProvider.Result.create(ParsedGodogFile(steps, test), psiFile)
         }
@@ -105,12 +105,11 @@ object GodogStepsIndex {
      * Resolves a 1-based file:line to the first real (non-whitespace) token on that line.
      * file is whatever form portablePath (run.go) wrote - see [GodogPathResolver].
      *
-     * Used to be "walk up to the enclosing func/method declaration", which was fine while
-     * DefLine only ever pointed at a function's own header line (registering a plain
-     * top-level function as a step handler) - but DefLine can now also be a step's
-     * registration call site inside some other function (the bound-method-value fallback in
-     * godog's test_context.go), and walking up there jumped past that line to the whole
-     * enclosing function. Landing on the line itself works for both.
+     * For a step, that line is always its `ctx.Step(...)`-style registration call site
+     * (godog doesn't try to resolve the handler's own definition - see test_context.go),
+     * typically inside InitializeScenario. Landing there rather than "helpfully" walking up
+     * to the enclosing function keeps the anchor on the actual reference, so a plain "go to
+     * declaration" on the handler argument still reaches the real implementation.
      */
     private fun resolveElement(project: Project, manifestDir: VirtualFile, file: String, line: Int): PsiElement? {
         val vFile = project.service<GodogPathResolver>().resolve(manifestDir, file) ?: return null

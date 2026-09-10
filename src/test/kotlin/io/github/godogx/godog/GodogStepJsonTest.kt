@@ -13,11 +13,8 @@ class GodogStepJsonTest {
               "steps": [
                 {
                   "expr": "^there are (\\d+) godogs${'$'}",
-                  "keyword": "",
                   "file": "/a/godogs_test.go",
-                  "line": 112,
-                  "defFile": "/a/godogs_test.go",
-                  "defLine": 79
+                  "line": 112
                 }
               ],
               "test": {
@@ -33,7 +30,7 @@ class GodogStepJsonTest {
         assertEquals(1, dump.steps.size)
         // Not "^there are (\\\\d+) godogs$" - a doubled backslash would stop matching digits.
         assertEquals("""^there are (\d+) godogs$""", dump.steps[0].expr)
-        assertEquals(79, dump.steps[0].defLine)
+        assertEquals(112, dump.steps[0].line)
 
         assertEquals("TestFeatures", dump.test?.name)
         assertEquals(47, dump.test?.line)

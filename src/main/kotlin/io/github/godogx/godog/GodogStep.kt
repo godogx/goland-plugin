@@ -6,11 +6,8 @@ package io.github.godogx.godog
  */
 data class GodogStep(
     val expr: String,
-    val keyword: String,
     val file: String,
     val line: Int,
-    val defFile: String,
-    val defLine: Int,
 )
 
 /**
