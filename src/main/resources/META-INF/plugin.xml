@@ -1,0 +1,25 @@
+<idea-plugin>
+    <id>io.github.godogx.godog</id>
+    <name>Godog Gherkin</name>
+    <vendor>godogx</vendor>
+
+    <description><![CDATA[
+        Adds support for .godog-gherkin.json manifests (produced by
+        <code>TestSuite.WriteManifest</code> in the
+        <a href="https://github.com/cucumber/godog">godog</a> library) to
+        enable step resolution and scenario run/debug in the standard
+        Gherkin plugin.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.go</depends>
+    <depends>gherkin</depends>
+
+    <extensions defaultExtensionNs="org.jetbrains.plugins.cucumber.steps">
+        <cucumberJvmExtensionPoint implementation="io.github.godogx.godog.GodogCucumberExtension"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <runConfigurationProducer implementation="io.github.godogx.godog.GodogRunConfigurationProducer"/>
+    </extensions>
+</idea-plugin>

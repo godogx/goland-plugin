@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# Kotlin compiler daemon / incremental state
+.kotlin/
+
+# IntelliJ Platform Gradle Plugin (downloaded IDE sandboxes, caches)
+.intellijPlatform/
+
+# IDE project files
+.idea/
+*.iml
+
+# Per-machine local override (see local.properties.example)
+local.properties
+
+# OS
+.DS_Store

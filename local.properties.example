@@ -1,0 +1,5 @@
+# Copy this file to local.properties (gitignored) to build against your own
+# installed GoLand instead of downloading one via `platformVersion` in
+# gradle.properties. Path should point at the .app bundle on macOS, or the
+# installation directory on Linux/Windows.
+localIdePath = /Applications/GoLand.app
